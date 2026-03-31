@@ -1,0 +1,78 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio Code
+.vscode/
+
+# Rider
+.idea/
+*.sln.iml
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# User-specific files
+*.swp
+*.tmp
+*.temp
+*.log
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# Node
+node_modules/
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Vite / React
+/dist
+/.turbo
+
+# dotenv environment variables
+.env
+.env.*
+
+# Logs
+*.log
+
+# Test output
+TestResults/
+*.trx
+
+# Docker
+docker-compose.override.yml
+
+# OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+
+# Ignore full-test-output if generated locally
+full-test-output.txt
