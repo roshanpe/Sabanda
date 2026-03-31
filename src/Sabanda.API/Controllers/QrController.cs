@@ -26,6 +26,12 @@ public class QrController : ControllerBase
     [HttpGet("api/v1/qr/lookup")]
     public async Task<IActionResult> Lookup([FromQuery] string token)
     {
+        if (string.IsNullOrWhiteSpace(token))
+            return BadRequest(new { detail = "A QR token is required." });
+
+        // Some clients may send URL-encoded tokens with spaces instead of '+' characters.
+        token = token.Replace(' ', '+');
+
         var response = await _lookupHandler.HandleAsync(token);
         return Ok(response);
     }

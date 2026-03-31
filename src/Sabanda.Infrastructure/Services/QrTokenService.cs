@@ -82,5 +82,9 @@ public class QrTokenService : IQrTokenService
         {
             throw new UnauthorizedException("QR token is invalid or expired.");
         }
+        catch (ArgumentException)
+        {
+            throw new UnauthorizedException("QR token is invalid or expired.");
+        }
     }
 }
