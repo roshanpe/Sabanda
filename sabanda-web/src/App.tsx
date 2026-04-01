@@ -10,6 +10,7 @@ import { MembershipsPage } from './features/memberships/MembershipsPage';
 import { ProgramsPage } from './features/programs/ProgramsPage';
 import { EventsPage } from './features/events/EventsPage';
 import { QrScanPage } from './features/members/QrScanPage';
+import { RegistrationPage } from './features/registration/RegistrationPage';
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<Layout><DashboardPage /></Layout>} />
+            <Route path="/registration" element={<Layout><RegistrationPage /></Layout>} />
             <Route path="/families" element={<Layout><FamiliesPage /></Layout>} />
             <Route path="/members/:id" element={<Layout><MemberDetailPage /></Layout>} />
             <Route path="/memberships" element={<Layout><MembershipsPage /></Layout>} />

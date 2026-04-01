@@ -19,6 +19,7 @@ export function Layout({ children }: { children: ReactNode }) {
         <Link to="/dashboard" style={{ color: '#fff', textDecoration: 'none', fontWeight: 600 }}>
           Sabanda
         </Link>
+        <Link to="/registration" style={{ color: '#cbd5e1', textDecoration: 'none' }}>Registration</Link>
         <Link to="/families" style={{ color: '#cbd5e1', textDecoration: 'none' }}>Families</Link>
         <Link to="/memberships" style={{ color: '#cbd5e1', textDecoration: 'none' }}>Memberships</Link>
         <Link to="/programs" style={{ color: '#cbd5e1', textDecoration: 'none' }}>Programs</Link>
