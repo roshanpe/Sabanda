@@ -2,7 +2,9 @@ import axios, { AxiosError } from 'axios';
 import { useAuthStore } from '../store/authStore';
 import { useTenantStore } from '../store/tenantStore';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5142';
+const envApiBase = import.meta.env.VITE_API_BASE_URL;
+const autoProtocol = `${window.location.protocol}//${window.location.hostname}:7247`;
+const API_BASE_URL = envApiBase ?? autoProtocol;
 
 export const apiClient = axios.create({
   baseURL: `${API_BASE_URL}/api/v1`,

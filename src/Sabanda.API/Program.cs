@@ -7,8 +7,31 @@ using Sabanda.API.Middleware;
 using Sabanda.API.Settings;
 using Sabanda.Infrastructure.Extensions;
 using Sabanda.Infrastructure.Persistence;
+using System.IO;
+using System.Security.Cryptography.X509Certificates;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(5142); // HTTP
+
+    // Prefer explicit local development certificate so HTTPS requests using IP (192.168.4.151)
+    // are valid and do not trigger ERR_CERT_COMMON_NAME_INVALID.
+    var certPath = builder.Configuration["Kestrel:Certificates:Default:Path"] 
+        ?? Path.Combine(builder.Environment.ContentRootPath, "..", "..", "..", "sabanda-web", "certs", "local-cert.pfx");
+    var certPassword = builder.Configuration["Kestrel:Certificates:Default:Password"] ?? "password";
+
+    if (File.Exists(certPath))
+    {
+        var cert = new X509Certificate2(certPath, certPassword);
+        options.ListenAnyIP(7247, listenOptions => listenOptions.UseHttps(cert));
+    }
+    else
+    {
+        options.ListenAnyIP(7247, listenOptions => listenOptions.UseHttps());
+    }
+});
 
 // ─── Startup validation (fail fast) ───────────────────────────────────────────
 var jwtKey = builder.Configuration["Jwt:SigningKey"];
@@ -53,10 +76,21 @@ if (!builder.Environment.IsEnvironment("Testing"))
 }
 
 // ─── CORS ─────────────────────────────────────────────────────────────────────
+// Allow local dev hosts and any LAN machine serving the frontend.
+// Replace 192.168.4.151 with your server machine IP if it differs.
 builder.Services.AddCors(o => o.AddDefaultPolicy(p =>
-    p.WithOrigins("http://localhost:5173", "http://localhost:5174")
-     .AllowAnyHeader()
-     .AllowAnyMethod()));
+    p.WithOrigins(
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "https://localhost:5173",
+        "https://localhost:5174",
+        "http://192.168.4.151:5173",
+        "http://192.168.4.151:5174",
+        "https://192.168.4.151:5173",
+        "https://192.168.4.151:5174"
+    )
+    .AllowAnyHeader()
+    .AllowAnyMethod()));
 
 // ─── Swagger/OpenAPI ──────────────────────────────────────────────────────────
 builder.Services.AddEndpointsApiExplorer();
@@ -115,11 +149,13 @@ app.UseMiddleware<JtiValidationMiddleware>();     // must be after auth
 
 app.UseAuthorization();
 
-if (app.Environment.IsDevelopment())
+// Always enable Swagger in local development, and allow explicit environment fallback.
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sabanda API v1");
+    c.RoutePrefix = "swagger";
+});
 
 if (!app.Environment.IsEnvironment("Testing"))
 {
