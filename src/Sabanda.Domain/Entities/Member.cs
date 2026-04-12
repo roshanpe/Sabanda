@@ -6,6 +6,7 @@ public class Member : TenantScopedEntity
 {
     public Guid FamilyId { get; private set; }
     public string FullName { get; private set; } = string.Empty;
+    public string Code { get; private set; } = string.Empty;
     public DateOnly DateOfBirth { get; private set; }
     // Computed in C# — age() is STABLE not IMMUTABLE so PostgreSQL can't use it in a stored generated column
     public bool IsAdult => DateOfBirth.AddYears(18) <= DateOnly.FromDateTime(DateTime.UtcNow);
@@ -31,13 +32,14 @@ public class Member : TenantScopedEntity
 
     private Member() { }
 
-    public Member(Guid tenantId, Guid familyId, string fullName, DateOnly dateOfBirth,
+    public Member(Guid tenantId, Guid familyId, string fullName, DateOnly dateOfBirth, string code,
         string? gender = null, string? email = null, string? phone = null, bool isPrimaryHolder = false)
     {
         TenantId = tenantId;
         FamilyId = familyId;
         FullName = fullName;
         DateOfBirth = dateOfBirth;
+        Code = code;
         Gender = gender;
         Email = email;
         Phone = phone;

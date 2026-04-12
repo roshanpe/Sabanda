@@ -28,7 +28,7 @@ public class GetFamilyQueryHandler
             throw new ForbiddenException("Access denied.");
         }
 
-        return new FamilyResponse(family.Id, family.DisplayName, family.PrimaryHolderUserId,
+        return new FamilyResponse(family.Id, family.DisplayName, family.Code, family.PrimaryHolderUserId,
             family.QrToken != null, family.CreatedAt);
     }
 }

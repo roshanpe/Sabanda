@@ -20,6 +20,9 @@ public class FamilyRepository : IFamilyRepository
     public Task<Family?> FindByQrTokenJtiAsync(Guid jti) =>
         _db.Families.FirstOrDefaultAsync(f => f.QrTokenJti == jti);
 
+    public Task<bool> ExistsByCodeAsync(Guid tenantId, string code) =>
+        _db.Families.AnyAsync(f => f.TenantId == tenantId && f.Code == code);
+
     public async Task AddAsync(Family family) =>
         await _db.Families.AddAsync(family);
 

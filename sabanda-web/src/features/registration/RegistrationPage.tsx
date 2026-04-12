@@ -198,6 +198,7 @@ export function RegistrationPage() {
             <div style={{ marginTop: 16, padding: 16, background: '#ecfccb', borderRadius: 8 }}>
               <strong>Family created:</strong>
               <div>{familyResult.displayName}</div>
+              <div>Code: <code>{familyResult.code}</code></div>
               <div>ID: <code>{familyResult.id}</code></div>       
               {familyQrLoading && <p>Generating QR code...</p>}
               {familyQrError && <p style={{ color: 'red' }}>{familyQrError}</p>}
@@ -289,6 +290,7 @@ export function RegistrationPage() {
           <div style={{ marginTop: 16, padding: 16, background: '#ecfccb', borderRadius: 8 }}>
             <strong>Member added:</strong>
             <div>{memberResult.fullName}</div>
+            <div>Code: <code>{memberResult.code}</code></div>
             <div>ID: <code>{memberResult.id}</code></div>
             {memberQrLoading && <p>Generating QR code...</p>}
             {memberQrToken && (

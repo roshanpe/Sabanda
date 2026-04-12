@@ -3,7 +3,7 @@ import { useAuthStore } from '../store/authStore';
 import { useTenantStore } from '../store/tenantStore';
 
 const envApiBase = import.meta.env.VITE_API_BASE_URL;
-const autoProtocol = `${window.location.protocol}//${window.location.hostname}:7247`;
+const autoProtocol = `${window.location.protocol}//${window.location.hostname}:5142`;
 const API_BASE_URL = envApiBase ?? autoProtocol;
 
 export const apiClient = axios.create({

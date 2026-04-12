@@ -43,6 +43,7 @@ public static class InfrastructureServiceExtensions
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IQrTokenService, QrTokenService>();
         services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<ICodeGenerator, CodeGenerator>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IFamilyRepository, FamilyRepository>();
         services.AddScoped<IMemberRepository, MemberRepository>();

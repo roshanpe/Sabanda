@@ -18,6 +18,7 @@ public record MemberResponse(
     Guid Id,
     Guid FamilyId,
     string FullName,
+    string Code,
     DateOnly DateOfBirth,
     bool IsAdult,
     string? Gender,

@@ -14,6 +14,7 @@ public class CreateMemberCommandHandler
     private readonly IAuditLogService _auditLog;
     private readonly ICurrentTenantService _tenant;
     private readonly ICurrentUserService _currentUser;
+    private readonly ICodeGenerator _codeGenerator;
     private readonly IValidator<CreateMemberRequest> _validator;
 
     public CreateMemberCommandHandler(
@@ -22,6 +23,7 @@ public class CreateMemberCommandHandler
         IAuditLogService auditLog,
         ICurrentTenantService tenant,
         ICurrentUserService currentUser,
+        ICodeGenerator codeGenerator,
         IValidator<CreateMemberRequest> validator)
     {
         _memberRepository = memberRepository;
@@ -29,6 +31,7 @@ public class CreateMemberCommandHandler
         _auditLog = auditLog;
         _tenant = tenant;
         _currentUser = currentUser;
+        _codeGenerator = codeGenerator;
         _validator = validator;
     }
 
@@ -50,7 +53,10 @@ public class CreateMemberCommandHandler
             throw new ForbiddenException("Access denied.");
         }
 
-        var member = new Member(_tenant.TenantId, familyId, request.FullName, request.DateOfBirth,
+        var tenantId = _tenant.TenantId;
+        var code = await _codeGenerator.GenerateMemberCodeAsync(tenantId);
+
+        var member = new Member(tenantId, familyId, request.FullName, request.DateOfBirth, code,
             request.Gender, request.Email, request.Phone, request.IsPrimaryHolder);
 
         if (!member.IsAdult && request.ConsentGiven == true)
@@ -73,7 +79,7 @@ public class CreateMemberCommandHandler
     }
 
     internal static MemberResponse ToResponse(Member m) =>
-        new(m.Id, m.FamilyId, m.FullName, m.DateOfBirth, m.IsAdult, m.Gender,
+        new(m.Id, m.FamilyId, m.FullName, m.Code, m.DateOfBirth, m.IsAdult, m.Gender,
             m.Email, m.Phone, m.IsPrimaryHolder, m.ConsentGiven,
             m.Occupation, m.BusinessName, m.QrToken != null, m.CreatedAt);
 }

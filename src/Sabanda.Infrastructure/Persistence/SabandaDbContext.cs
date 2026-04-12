@@ -35,9 +35,11 @@ public class SabandaDbContext : DbContext
 
         // Global tenant isolation filters — only active when tenant is resolved
         modelBuilder.Entity<Family>()
-            .HasQueryFilter(e => !_tenantService.IsResolved || e.TenantId == _tenantService.TenantId);
+            .HasQueryFilter(e => !_tenantService.IsResolved || e.TenantId == _tenantService.TenantId)
+            .HasIndex(f => new { f.TenantId, f.Code }).IsUnique();
         modelBuilder.Entity<Member>()
-            .HasQueryFilter(e => !_tenantService.IsResolved || e.TenantId == _tenantService.TenantId);
+            .HasQueryFilter(e => !_tenantService.IsResolved || e.TenantId == _tenantService.TenantId)
+            .HasIndex(m => new { m.TenantId, m.Code }).IsUnique();
         modelBuilder.Entity<AppUser>()
             .HasQueryFilter(e => !_tenantService.IsResolved || e.TenantId == _tenantService.TenantId);
         modelBuilder.Entity<Membership>()

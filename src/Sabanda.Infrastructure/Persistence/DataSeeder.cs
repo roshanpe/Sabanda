@@ -11,13 +11,21 @@ public static class DataSeeder
         if (await db.Tenants.AnyAsync())
             return;
 
-        var tenant = new Tenant("Default Tenant", "default");
-        await db.Tenants.AddAsync(tenant);
+        var defaultTenant = new Tenant("Default Tenant", "default");
+        await db.Tenants.AddAsync(defaultTenant);
+
+        var devTenant = new Tenant("Development Tenant", "dev");
+        await db.Tenants.AddAsync(devTenant);
+
         await db.SaveChangesAsync();
 
         var passwordHash = BCrypt.Net.BCrypt.HashPassword("Admin@1234!", workFactor: 12);
-        var adminUser = new AppUser(tenant.Id, "admin@sabanda.app", passwordHash, UserRole.Administrator);
-        await db.AppUsers.AddAsync(adminUser);
+        var defaultAdmin = new AppUser(defaultTenant.Id, "admin@sabanda.app", passwordHash, UserRole.Administrator);
+        await db.AppUsers.AddAsync(defaultAdmin);
+
+        var devAdmin = new AppUser(devTenant.Id, "admin@dev.com", passwordHash, UserRole.Administrator);
+        await db.AppUsers.AddAsync(devAdmin);
+
         await db.SaveChangesAsync();
     }
 }

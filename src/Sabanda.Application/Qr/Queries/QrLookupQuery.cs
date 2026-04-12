@@ -50,7 +50,7 @@ public class QrLookupQueryHandler
             var family = await _familyRepository.FindByQrTokenJtiAsync(lookup.Jti)
                 ?? throw new NotFoundException("QR token has been regenerated or is no longer valid.");
 
-            var response = new FamilyResponse(family.Id, family.DisplayName,
+            var response = new FamilyResponse(family.Id, family.DisplayName, family.Code,
                 family.PrimaryHolderUserId, family.QrToken != null, family.CreatedAt);
 
             await _auditLog.LogAsync(AuditAction.QrTokenRegenerated, "Family", family.Id);

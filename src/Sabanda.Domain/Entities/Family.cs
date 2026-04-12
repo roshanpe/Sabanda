@@ -5,6 +5,7 @@ namespace Sabanda.Domain.Entities;
 public class Family : TenantScopedEntity
 {
     public string DisplayName { get; private set; } = string.Empty;
+    public string Code { get; private set; } = string.Empty;
     public Guid PrimaryHolderUserId { get; private set; }
     public string? QrToken { get; private set; }
     public Guid? QrTokenJti { get; private set; }
@@ -12,11 +13,12 @@ public class Family : TenantScopedEntity
 
     private Family() { }
 
-    public Family(Guid tenantId, string displayName, Guid primaryHolderUserId)
+    public Family(Guid tenantId, string displayName, Guid primaryHolderUserId, string code)
     {
         TenantId = tenantId;
         DisplayName = displayName;
         PrimaryHolderUserId = primaryHolderUserId;
+        Code = code;
     }
 
     public void SetQrToken(string token, Guid jti)

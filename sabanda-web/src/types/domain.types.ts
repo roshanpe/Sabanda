@@ -9,6 +9,7 @@ import {
 export interface Family {
   id: string;
   displayName: string;
+  code: string;
   primaryHolderUserId: string;
   createdAt: string;
 }
@@ -21,6 +22,7 @@ export interface Member {
   id: string;
   familyId: string;
   fullName: string;
+  code: string;
   dateOfBirth: string;
   isAdult: boolean;
   gender?: string;

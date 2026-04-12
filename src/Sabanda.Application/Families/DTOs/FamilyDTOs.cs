@@ -9,6 +9,7 @@ public record CreateFamilyRequest(
 public record FamilyResponse(
     Guid Id,
     string DisplayName,
+    string Code,
     Guid PrimaryHolderUserId,
     bool HasQrToken,
     DateTimeOffset CreatedAt
