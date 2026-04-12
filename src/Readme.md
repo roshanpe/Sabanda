@@ -15,3 +15,9 @@ dotnet test tests/Sabanda.IntegrationTests/Sabanda.IntegrationTests.csproj --log
 #Run UI#
 cd /media/roshan/Data/git/my/Sabanda/sabanda-web
 npm run dev -- --host 0.0.0.0
+
+
+Log in:
+Tanent: dev
+email: admin@dev.com
+password: Admin@1234!

@@ -56,6 +56,20 @@ export function RegistrationPage() {
       });
       setFamilyResult(family);
       setFamilyId(family.id);
+
+      // Automatically generate QR code for the new member
+      try {
+        const result = await familiesApi.regenerateQr(family.id);
+        setFamilyQrToken(result.token);
+        return result.token;
+      } catch (error) {
+        const message = getErrorMessage(error);
+        setFamilyQrError(message);
+        throw error;
+      } finally {
+        setFamilyQrLoading(false);
+      }
+      
       setDisplayName('');
       setPrimaryEmail('');
       setPrimaryPassword('');
@@ -109,6 +123,17 @@ export function RegistrationPage() {
       });
       setMemberResult(member);
       setMemberData(defaultMemberData);
+
+      // Automatically generate QR code for the new member
+      setMemberQrLoading(true);
+      try {
+        const result = await membersApi.regenerateQr(member.id);
+        setMemberQrToken(result.token);
+      } catch (qrError) {
+        setMemberQrError(getErrorMessage(qrError));
+      } finally {
+        setMemberQrLoading(false);
+      }
     } catch (error) {
       setMemberError(getErrorMessage(error));
     } finally {
@@ -173,15 +198,8 @@ export function RegistrationPage() {
             <div style={{ marginTop: 16, padding: 16, background: '#ecfccb', borderRadius: 8 }}>
               <strong>Family created:</strong>
               <div>{familyResult.displayName}</div>
-              <div>ID: <code>{familyResult.id}</code></div>
-              <button
-                type="button"
-                onClick={handleGenerateFamilyQr}
-                disabled={familyQrLoading}
-                style={{ marginTop: 12 }}
-              >
-                {familyQrLoading ? 'Generating QR...' : familyQrToken ? 'Regenerate QR' : 'Generate QR'}
-              </button>
+              <div>ID: <code>{familyResult.id}</code></div>       
+              {familyQrLoading && <p>Generating QR code...</p>}
               {familyQrError && <p style={{ color: 'red' }}>{familyQrError}</p>}
               {familyQrToken && (
                 <div style={{ marginTop: 16 }}>
@@ -272,21 +290,14 @@ export function RegistrationPage() {
             <strong>Member added:</strong>
             <div>{memberResult.fullName}</div>
             <div>ID: <code>{memberResult.id}</code></div>
-            <button
-              type="button"
-              onClick={handleGenerateMemberQr}
-              disabled={memberQrLoading}
-              style={{ marginTop: 12 }}
-            >
-              {memberQrLoading ? 'Generating QR...' : memberQrToken ? 'Regenerate QR' : 'Generate QR'}
-            </button>
-            {memberQrError && <p style={{ color: 'red' }}>{memberQrError}</p>}
+            {memberQrLoading && <p>Generating QR code...</p>}
             {memberQrToken && (
               <div style={{ marginTop: 16 }}>
                 <h3>Member QR Code</h3>
                 <QrDisplay token={memberQrToken} onRegenerate={handleGenerateMemberQr} />
               </div>
             )}
+            {memberQrError && <p style={{ color: 'red' }}>{memberQrError}</p>}
           </div>
         )}
       </section>
