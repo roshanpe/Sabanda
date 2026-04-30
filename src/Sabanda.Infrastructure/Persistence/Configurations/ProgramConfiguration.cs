@@ -15,6 +15,11 @@ public class ProgramConfiguration : IEntityTypeConfiguration<Program>
         builder.Property(p => p.CreatedAt).HasDefaultValueSql("now()");
         builder.Property(p => p.TenantId).IsRequired();
         builder.Property(p => p.Name).IsRequired().HasMaxLength(200);
+        builder.Property(p => p.AgeGroup).HasMaxLength(100);
+        builder.Property(p => p.Frequency).HasConversion<string>().HasMaxLength(50);
+        builder.Property(p => p.Venue).HasMaxLength(200);
+        builder.Property(p => p.Day).HasConversion<string>().HasMaxLength(20);
+        builder.Property(p => p.Time).HasColumnType("time");
         builder.Property(p => p.ScheduleJson).HasColumnType("jsonb");
         builder.HasIndex(p => new { p.TenantId });
     }

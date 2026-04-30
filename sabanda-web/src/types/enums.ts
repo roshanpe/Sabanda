@@ -41,3 +41,21 @@ export const EventBillingType = {
   Individual: 'Individual',
 } as const;
 export type EventBillingType = (typeof EventBillingType)[keyof typeof EventBillingType];
+
+export const ProgramFrequency = {
+  Weekly: 'weekly',
+  Fortnightly: 'fortnightly',
+  Monthly: 'monthly',
+} as const;
+export type ProgramFrequency = (typeof ProgramFrequency)[keyof typeof ProgramFrequency];
+
+export const ProgramDay = {
+  Monday: 'Monday',
+  Tuesday: 'Tuesday',
+  Wednesday: 'Wednesday',
+  Thursday: 'Thursday',
+  Friday: 'Friday',
+  Saturday: 'Saturday',
+  Sunday: 'Sunday',
+} as const;
+export type ProgramDay = (typeof ProgramDay)[keyof typeof ProgramDay];

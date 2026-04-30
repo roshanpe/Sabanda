@@ -32,8 +32,17 @@ public class CreateProgramCommandHandler
                 result.Errors.GroupBy(e => e.PropertyName)
                     .ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage).ToArray()));
 
-        var program = new Program(_tenant.TenantId, request.Name, request.Capacity,
-            request.Description, request.CoordinatorUserId);
+        var program = new Program(
+            _tenant.TenantId,
+            request.Name,
+            request.Capacity,
+            request.Description,
+            request.CoordinatorUserId,
+            request.AgeGroup,
+            request.Frequency,
+            request.Venue,
+            request.Day,
+            request.Time);
 
         await _programRepo.AddAsync(program);
         await _programRepo.SaveChangesAsync();
@@ -42,7 +51,18 @@ public class CreateProgramCommandHandler
     }
 
     internal static ProgramResponse ToResponse(Program p) =>
-        new(p.Id, p.Name, p.Description, p.Capacity, p.CoordinatorUserId, p.CreatedAt);
+        new(
+            p.Id,
+            p.Name,
+            p.Description,
+            p.Capacity,
+            p.CoordinatorUserId,
+            p.AgeGroup,
+            p.Frequency,
+            p.Venue,
+            p.Day,
+            p.Time,
+            p.CreatedAt);
 }
 
 public class EnrolMemberCommandHandler

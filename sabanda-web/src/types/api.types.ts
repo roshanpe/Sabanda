@@ -49,11 +49,18 @@ export interface UpdatePaymentStatusRequest {
   newStatus: string;
 }
 
+import type { ProgramFrequency, ProgramDay } from './enums';
+
 export interface CreateProgramRequest {
   name: string;
   capacity: number;
   description?: string;
   coordinatorUserId?: string;
+  ageGroup?: string;
+  frequency?: ProgramFrequency;
+  venue?: string;
+  day?: ProgramDay;
+  time?: string;
 }
 
 export interface EnrolMemberRequest {

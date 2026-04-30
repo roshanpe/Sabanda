@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Sabanda.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using Sabanda.Infrastructure.Persistence;
 namespace Sabanda.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(SabandaDbContext))]
-    partial class SabandaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260430185933_AddProgramSchedulingFields")]
+    partial class AddProgramSchedulingFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

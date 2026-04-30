@@ -6,7 +6,12 @@ public record CreateProgramRequest(
     string Name,
     int Capacity,
     string? Description = null,
-    Guid? CoordinatorUserId = null
+    Guid? CoordinatorUserId = null,
+    string? AgeGroup = null,
+    Frequency? Frequency = null,
+    string? Venue = null,
+    DayOfWeek? Day = null,
+    TimeOnly? Time = null
 );
 
 public record ProgramResponse(
@@ -15,6 +20,11 @@ public record ProgramResponse(
     string? Description,
     int Capacity,
     Guid? CoordinatorUserId,
+    string? AgeGroup,
+    Frequency? Frequency,
+    string? Venue,
+    DayOfWeek? Day,
+    TimeOnly? Time,
     DateTimeOffset CreatedAt
 );
 

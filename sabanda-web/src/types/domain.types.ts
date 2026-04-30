@@ -4,6 +4,8 @@ import {
   EnrolmentStatus,
   RegistrationStatus,
   EventBillingType,
+  ProgramFrequency,
+  ProgramDay,
 } from './enums';
 
 export interface Family {
@@ -52,6 +54,11 @@ export interface Program {
   description?: string;
   capacity: number;
   coordinatorUserId?: string;
+  ageGroup?: string;
+  frequency?: ProgramFrequency;
+  venue?: string;
+  day?: ProgramDay;
+  time?: string;
   createdAt: string;
 }
 
