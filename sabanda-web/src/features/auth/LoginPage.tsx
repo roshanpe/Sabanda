@@ -11,9 +11,9 @@ export function LoginPage() {
   const navigate = useNavigate();
   const setTenantSlug = useTenantStore((s) => s.setTenantSlug);
 
-  const [tenantSlug, setTenantSlugLocal] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [tenantSlug, setTenantSlugLocal] = useState('default');
+  const [email, setEmail] = useState('admin@sabanda.app');
+  const [password, setPassword] = useState('Admin@1234!');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -62,6 +62,9 @@ export function LoginPage() {
           {loading ? 'Signing in...' : 'Sign in'}
         </button>
       </form>
+      <p style={{ fontSize: '0.9em', color: '#666', textAlign: 'center', margin: 0 }}>
+        Default credentials are pre-filled for easy login
+      </p>
     </div>
   );
 }

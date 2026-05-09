@@ -82,12 +82,20 @@ builder.Services.AddCors(o => o.AddDefaultPolicy(p =>
     p.WithOrigins(
         "http://localhost:5173",
         "http://localhost:5174",
+        "http://localhost:5175",
+        "http://localhost:5176",
         "https://localhost:5173",
         "https://localhost:5174",
+        "https://localhost:5175",
+        "https://localhost:5176",
         "http://192.168.4.151:5173",
         "http://192.168.4.151:5174",
+        "http://192.168.4.151:5175",
+        "http://192.168.4.151:5176",
         "https://192.168.4.151:5173",
-        "https://192.168.4.151:5174"
+        "https://192.168.4.151:5174",
+        "https://192.168.4.151:5175",
+        "https://192.168.4.151:5176"
     )
     .AllowAnyHeader()
     .AllowAnyMethod()));

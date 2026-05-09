@@ -37,6 +37,12 @@ export interface Member {
   createdAt: string;
 }
 
+export interface User {
+  id: string;
+  email: string;
+  role: string;
+}
+
 export interface Membership {
   id: string;
   familyId: string;

@@ -27,6 +27,9 @@ public class UserRepository : IUserRepository
         return await _db.AppUsers.FindAsync(id);
     }
 
+    public Task<List<AppUser>> GetAllByTenantAsync(Guid tenantId) =>
+        _db.AppUsers.Where(u => u.TenantId == tenantId).ToListAsync();
+
     public async Task AddAsync(AppUser user)
     {
         await _db.AppUsers.AddAsync(user);

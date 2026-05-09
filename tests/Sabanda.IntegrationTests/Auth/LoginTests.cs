@@ -127,7 +127,7 @@ public class LoginTests
         await db.SaveChangesAsync();
 
         // Add a family to Tenant B (bypass tenant filter)
-        var familyB = new Sabanda.Domain.Entities.Family(tenantB.Id, "Family B", Guid.NewGuid());
+        var familyB = new Sabanda.Domain.Entities.Family(tenantB.Id, "Family B", Guid.NewGuid(), "FAMB");
         await db.Families.AddAsync(familyB);
         await db.SaveChangesAsync();
 

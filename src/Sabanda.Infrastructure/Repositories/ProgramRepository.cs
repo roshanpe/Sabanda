@@ -17,6 +17,9 @@ public class ProgramRepository : IProgramRepository
     public Task<Program?> FindByIdAsync(Guid id) =>
         _db.Programs.FirstOrDefaultAsync(p => p.Id == id);
 
+    public Task<List<Program>> GetAllByTenantAsync(Guid tenantId) =>
+        _db.Programs.Where(p => p.TenantId == tenantId).ToListAsync();
+
     public async Task AddAsync(Program program) =>
         await _db.Programs.AddAsync(program);
 

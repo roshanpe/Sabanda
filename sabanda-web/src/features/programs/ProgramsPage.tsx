@@ -1,9 +1,9 @@
 import { useState, useEffect, type FormEvent } from 'react';
 import { programsApi } from '../../api/programs.api';
-import { membersApi } from '../../api/members.api';
+import { usersApi } from '../../api/users.api';
 import { useAuthStore } from '../../store/authStore';
 import { useTenantStore } from '../../store/tenantStore';
-import type { Program, Enrolment, Member } from '../../types/domain.types';
+import type { Program, Enrolment, User } from '../../types/domain.types';
 import type { ProgramFrequency, ProgramDay } from '../../types/enums';
 import { getErrorMessage } from '../../utils/errorUtils';
 
@@ -17,11 +17,15 @@ export function ProgramsPage() {
   const [day, setDay] = useState<ProgramDay | ''>('');
   const [time, setTime] = useState('');
   const [coordinatorUserId, setCoordinatorUserId] = useState('');
-  const [members, setMembers] = useState<Member[]>([]);
-  const [membersLoading, setMembersLoading] = useState(true);
-  const [membersError, setMembersError] = useState<string | null>(null);
+  const [users, setUsers] = useState<User[]>([]);
+  const [usersLoading, setUsersLoading] = useState(true);
+  const [usersError, setUsersError] = useState<string | null>(null);
   const [createdProgram, setCreatedProgram] = useState<Program | null>(null);
   const [createError, setCreateError] = useState<string | null>(null);
+
+  const [programs, setPrograms] = useState<Program[]>([]);
+  const [programsLoading, setProgramsLoading] = useState(true);
+  const [programsError, setProgramsError] = useState<string | null>(null);
 
   const [programId, setProgramId] = useState('');
   const [memberId, setMemberId] = useState('');
@@ -29,25 +33,47 @@ export function ProgramsPage() {
   const [enrolError, setEnrolError] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadMembers = async () => {
+    const loadUsers = async () => {
       try {
-        setMembersLoading(true);
-        setMembersError(null);
-        console.log('Loading members...');
+        setUsersLoading(true);
+        setUsersError(null);
+        console.log('Loading users...');
         console.log('Auth token:', useAuthStore.getState().token);
         console.log('Tenant slug:', useTenantStore.getState().tenantSlug);
-        const allMembers = await membersApi.getAll();
-        console.log('Members loaded:', allMembers);
-        setMembers(allMembers);
+        const allUsers = await usersApi.getAll();
+        console.log('Users loaded:', allUsers);
+        setUsers(allUsers);
       } catch (err) {
         const errorMsg = getErrorMessage(err);
-        console.error('Failed to load members:', errorMsg);
-        setMembersError(errorMsg);
+        console.error('Failed to load users:', errorMsg);
+        setUsersError(errorMsg);
       } finally {
-        setMembersLoading(false);
+        setUsersLoading(false);
       }
     };
-    loadMembers();
+    loadUsers();
+  }, []);
+
+  useEffect(() => {
+    const loadPrograms = async () => {
+      try {
+        setProgramsLoading(true);
+        setProgramsError(null);
+        console.log('Loading programs...');
+        console.log('Auth token:', useAuthStore.getState().token);
+        console.log('Tenant slug:', useTenantStore.getState().tenantSlug);
+        const allPrograms = await programsApi.getAll();
+        console.log('Programs loaded:', allPrograms);
+        setPrograms(allPrograms);
+      } catch (err) {
+        const errorMsg = getErrorMessage(err);
+        console.error('Failed to load programs:', errorMsg);
+        setProgramsError(errorMsg);
+      } finally {
+        setProgramsLoading(false);
+      }
+    };
+    loadPrograms();
   }, []);
 
   const handleCreate = async (e: FormEvent) => {
@@ -70,6 +96,19 @@ export function ProgramsPage() {
       console.log('Tenant slug:', useTenantStore.getState().tenantSlug);
       const p = await programsApi.create(programData);
       setCreatedProgram(p);
+      // Refresh the programs list
+      const allPrograms = await programsApi.getAll();
+      setPrograms(allPrograms);
+      // Clear the form
+      setName('');
+      setCapacity('');
+      setDescription('');
+      setAgeGroup('');
+      setFrequency('');
+      setVenue('');
+      setDay('');
+      setTime('');
+      setCoordinatorUserId('');
     } catch (err) {
       setCreateError(getErrorMessage(err));
     }
@@ -120,16 +159,20 @@ export function ProgramsPage() {
             value={venue}
             onChange={(e) => setVenue(e.target.value)}
           />
-          <select value={coordinatorUserId} onChange={(e) => setCoordinatorUserId(e.target.value)} disabled={membersLoading}>
-            <option value="">{membersLoading ? 'Loading coordinators...' : 'Coordinator (optional)'}</option>
-            {members.map((member) => (
-              <option key={member.id} value={member.id}>
-                {member.fullName}
+          <select value={coordinatorUserId} onChange={(e) => setCoordinatorUserId(e.target.value)} disabled={usersLoading}>
+            <option value="">{usersLoading ? 'Loading coordinators...' : 'Coordinator (optional)'}</option>
+            {users.map((user) => (
+              <option key={user.id} value={user.id}>
+                {user.email} ({user.role})
               </option>
             ))}
           </select>
-          {membersError && <p style={{ color: 'red', fontSize: '0.9em' }}>Error loading members: {membersError}</p>}
-          <p style={{ color: 'orange', fontSize: '0.9em' }}>Note: Coordinator selection is currently using members. This may need to be changed to users.</p>
+          {usersError && <p style={{ color: 'red', fontSize: '0.9em' }}>Error loading coordinators: {usersError}</p>}
+          {!usersLoading && users.length === 0 && (
+            <p style={{ color: '#666', fontSize: '0.9em' }}>
+              No coordinators are available yet. Create a user first or assign an existing user as a coordinator.
+            </p>
+          )}
           <select value={day} onChange={(e) => setDay(e.target.value as ProgramDay)}>
             <option value="">Day (optional)</option>
             <option value="Monday">Monday</option>
@@ -160,6 +203,63 @@ export function ProgramsPage() {
             {createdProgram.day && <>Day: {createdProgram.day}<br /></>}
             {createdProgram.time && <>Time: {createdProgram.time}<br /></>}
             <code>{createdProgram.id}</code>
+          </div>
+        )}
+      </div>
+
+      <div>
+        <h2>All Programs</h2>
+        {programsLoading && <p>Loading programs...</p>}
+        {programsError && <p style={{ color: 'red' }}>Error loading programs: {programsError}</p>}
+        {!programsLoading && !programsError && programs.length === 0 && <p>No programs found.</p>}
+        {!programsLoading && !programsError && programs.length > 0 && (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
+            {programs.map((program) => (
+              <div key={program.id} style={{ border: '1px solid #ddd', borderRadius: 8, padding: 16, background: '#fafafa' }}>
+                <h3 style={{ margin: '0 0 8px 0' }}>{program.name}</h3>
+                <p style={{ margin: '4px 0', fontSize: '0.9em' }}>
+                  <strong>Capacity:</strong> {program.capacity}
+                </p>
+                {program.description && (
+                  <p style={{ margin: '4px 0', fontSize: '0.9em' }}>
+                    <strong>Description:</strong> {program.description}
+                  </p>
+                )}
+                {program.ageGroup && (
+                  <p style={{ margin: '4px 0', fontSize: '0.9em' }}>
+                    <strong>Age Group:</strong> {program.ageGroup}
+                  </p>
+                )}
+                {program.frequency && (
+                  <p style={{ margin: '4px 0', fontSize: '0.9em' }}>
+                    <strong>Frequency:</strong> {program.frequency}
+                  </p>
+                )}
+                {program.venue && (
+                  <p style={{ margin: '4px 0', fontSize: '0.9em' }}>
+                    <strong>Venue:</strong> {program.venue}
+                  </p>
+                )}
+                {program.day && (
+                  <p style={{ margin: '4px 0', fontSize: '0.9em' }}>
+                    <strong>Day:</strong> {program.day}
+                  </p>
+                )}
+                {program.time && (
+                  <p style={{ margin: '4px 0', fontSize: '0.9em' }}>
+                    <strong>Time:</strong> {program.time}
+                  </p>
+                )}
+                {program.coordinatorUserId && (
+                  <p style={{ margin: '4px 0', fontSize: '0.9em' }}>
+                    <strong>Coordinator ID:</strong> {program.coordinatorUserId}
+                  </p>
+                )}
+                <p style={{ margin: '8px 0 0 0', fontSize: '0.8em', color: '#666' }}>
+                  <code>{program.id}</code>
+                </p>
+              </div>
+            ))}
           </div>
         )}
       </div>

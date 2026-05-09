@@ -6,6 +6,9 @@ export const programsApi = {
   create: (data: CreateProgramRequest) =>
     apiClient.post<Program>('/programs', data).then((r) => r.data),
 
+  getAll: () =>
+    apiClient.get<Program[]>('/programs').then((r) => r.data),
+
   enrol: (programId: string, data: EnrolMemberRequest) =>
     apiClient.post<Enrolment>(`/programs/${programId}/enrolments`, data).then((r) => r.data),
 

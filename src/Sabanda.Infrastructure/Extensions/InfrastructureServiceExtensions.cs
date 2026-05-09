@@ -12,6 +12,8 @@ using Sabanda.Application.Qr.Commands;
 using Sabanda.Application.Qr.Queries;
 using Sabanda.Application.Memberships.Commands;
 using Sabanda.Application.Programs.Commands;
+using Sabanda.Application.Programs.Queries;
+using Sabanda.Application.Users.Queries;
 using Sabanda.Application.Events.Commands;
 using Sabanda.Infrastructure.Persistence;
 using Sabanda.Infrastructure.Repositories;
@@ -73,6 +75,8 @@ public static class InfrastructureServiceExtensions
         services.AddScoped<CreateMembershipCommandHandler>();
         services.AddScoped<UpdatePaymentStatusCommandHandler>();
         services.AddScoped<CreateProgramCommandHandler>();
+        services.AddScoped<GetAllProgramsQueryHandler>();
+        services.AddScoped<GetAllUsersQueryHandler>();
         services.AddScoped<EnrolMemberCommandHandler>();
         services.AddScoped<CancelEnrolmentCommandHandler>();
         services.AddScoped<CreateEventCommandHandler>();

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Sabanda.Application.Programs.Commands;
 using Sabanda.Application.Programs.DTOs;
+using Sabanda.Application.Programs.Queries;
 
 namespace Sabanda.API.Controllers;
 
@@ -13,15 +14,18 @@ public class ProgramController : ControllerBase
     private readonly CreateProgramCommandHandler _createHandler;
     private readonly EnrolMemberCommandHandler _enrolHandler;
     private readonly CancelEnrolmentCommandHandler _cancelHandler;
+    private readonly GetAllProgramsQueryHandler _getAllHandler;
 
     public ProgramController(
         CreateProgramCommandHandler createHandler,
         EnrolMemberCommandHandler enrolHandler,
-        CancelEnrolmentCommandHandler cancelHandler)
+        CancelEnrolmentCommandHandler cancelHandler,
+        GetAllProgramsQueryHandler getAllHandler)
     {
         _createHandler = createHandler;
         _enrolHandler = enrolHandler;
         _cancelHandler = cancelHandler;
+        _getAllHandler = getAllHandler;
     }
 
     [HttpPost]
@@ -30,6 +34,13 @@ public class ProgramController : ControllerBase
     {
         var response = await _createHandler.HandleAsync(request);
         return StatusCode(201, response);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var response = await _getAllHandler.HandleAsync();
+        return Ok(response);
     }
 
     [HttpPost("{id:guid}/enrolments")]
