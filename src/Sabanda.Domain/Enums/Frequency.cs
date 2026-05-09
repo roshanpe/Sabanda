@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace Sabanda.Domain.Enums;
 
-[JsonConverter(typeof(JsonStringEnumConverter), JsonNamingPolicy.CamelCase)]
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum Frequency
 {
     Weekly,

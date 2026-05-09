@@ -43,9 +43,9 @@ export const EventBillingType = {
 export type EventBillingType = (typeof EventBillingType)[keyof typeof EventBillingType];
 
 export const ProgramFrequency = {
-  Weekly: 'weekly',
-  Fortnightly: 'fortnightly',
-  Monthly: 'monthly',
+  Weekly: 'Weekly',
+  Fortnightly: 'Fortnightly',
+  Monthly: 'Monthly',
 } as const;
 export type ProgramFrequency = (typeof ProgramFrequency)[keyof typeof ProgramFrequency];
 

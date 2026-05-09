@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { UserRole } from '../types/enums';
 
 interface AuthState {
@@ -12,22 +13,29 @@ interface AuthState {
   isAuthenticated: () => boolean;
 }
 
-export const useAuthStore = create<AuthState>((set, get) => ({
-  token: null,
-  userId: null,
-  role: null,
-  familyId: null,
-  expiresAt: null,
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set, get) => ({
+      token: null,
+      userId: null,
+      role: null,
+      familyId: null,
+      expiresAt: null,
 
-  setAuth: (token, userId, role, expiresAt, familyId) =>
-    set({ token, userId, role, expiresAt, familyId: familyId ?? null }),
+      setAuth: (token, userId, role, expiresAt, familyId) =>
+        set({ token, userId, role, expiresAt, familyId: familyId ?? null }),
 
-  clearAuth: () =>
-    set({ token: null, userId: null, role: null, familyId: null, expiresAt: null }),
+      clearAuth: () =>
+        set({ token: null, userId: null, role: null, familyId: null, expiresAt: null }),
 
-  isAuthenticated: () => {
-    const { token, expiresAt } = get();
-    if (!token || !expiresAt) return false;
-    return new Date(expiresAt) > new Date();
-  },
-}));
+      isAuthenticated: () => {
+        const { token, expiresAt } = get();
+        if (!token || !expiresAt) return false;
+        return new Date(expiresAt) > new Date();
+      },
+    }),
+    {
+      name: 'auth-storage',
+    }
+  )
+);

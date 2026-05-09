@@ -26,6 +26,9 @@ public class MemberRepository : IMemberRepository
     public Task<bool> ExistsByCodeAsync(Guid tenantId, string code) =>
         _db.Members.AnyAsync(m => m.TenantId == tenantId && m.Code == code);
 
+    public Task<List<Member>> GetAllByTenantAsync(Guid tenantId) =>
+        _db.Members.Where(m => m.TenantId == tenantId).ToListAsync();
+
     public async Task AddAsync(Member member) =>
         await _db.Members.AddAsync(member);
 

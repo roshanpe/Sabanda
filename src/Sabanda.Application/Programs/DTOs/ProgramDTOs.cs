@@ -11,7 +11,7 @@ public record CreateProgramRequest(
     Frequency? Frequency = null,
     string? Venue = null,
     DayOfWeek? Day = null,
-    TimeOnly? Time = null
+    string? Time = null
 );
 
 public record ProgramResponse(
@@ -24,7 +24,7 @@ public record ProgramResponse(
     Frequency? Frequency,
     string? Venue,
     DayOfWeek? Day,
-    TimeOnly? Time,
+    string? Time,
     DateTimeOffset CreatedAt
 );
 

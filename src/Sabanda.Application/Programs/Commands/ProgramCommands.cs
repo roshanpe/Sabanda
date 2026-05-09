@@ -12,15 +12,18 @@ public class CreateProgramCommandHandler
 {
     private readonly IProgramRepository _programRepo;
     private readonly ICurrentTenantService _tenant;
+    private readonly IUserRepository _userRepo;
     private readonly IValidator<CreateProgramRequest> _validator;
 
     public CreateProgramCommandHandler(
         IProgramRepository programRepo,
         ICurrentTenantService tenant,
+        IUserRepository userRepo,
         IValidator<CreateProgramRequest> validator)
     {
         _programRepo = programRepo;
         _tenant = tenant;
+        _userRepo = userRepo;
         _validator = validator;
     }
 
@@ -32,6 +35,33 @@ public class CreateProgramCommandHandler
                 result.Errors.GroupBy(e => e.PropertyName)
                     .ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage).ToArray()));
 
+        // Validate coordinator user exists if provided
+        // if (request.CoordinatorUserId.HasValue)
+        // {
+        //     var coordinator = await _userRepo.FindByIdAsync(request.CoordinatorUserId.Value);
+        //     if (coordinator == null)
+        //         throw new Common.Exceptions.ValidationException(new Dictionary<string, string[]>
+        //         {
+        //             ["CoordinatorUserId"] = new[] { "Coordinator user not found." }
+        //         });
+        // }
+
+        TimeOnly? time = null;
+        if (!string.IsNullOrWhiteSpace(request.Time))
+        {
+            if (TimeOnly.TryParse(request.Time, out var parsedTime))
+            {
+                time = parsedTime;
+            }
+            else
+            {
+                throw new Common.Exceptions.ValidationException(new Dictionary<string, string[]>
+                {
+                    ["Time"] = new[] { "Invalid time format. Expected format: HH:mm" }
+                });
+            }
+        }
+
         var program = new Program(
             _tenant.TenantId,
             request.Name,
@@ -42,7 +72,7 @@ public class CreateProgramCommandHandler
             request.Frequency,
             request.Venue,
             request.Day,
-            request.Time);
+            time);
 
         await _programRepo.AddAsync(program);
         await _programRepo.SaveChangesAsync();
@@ -61,7 +91,7 @@ public class CreateProgramCommandHandler
             p.Frequency,
             p.Venue,
             p.Day,
-            p.Time,
+            p.Time?.ToString("HH:mm"),
             p.CreatedAt);
 }
 

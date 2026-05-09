@@ -25,7 +25,7 @@ public class ProgramController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Policy = "RequireAdmin")]
+    [Authorize(Policy = "RequireStaff")]
     public async Task<IActionResult> Create([FromBody] CreateProgramRequest request)
     {
         var response = await _createHandler.HandleAsync(request);

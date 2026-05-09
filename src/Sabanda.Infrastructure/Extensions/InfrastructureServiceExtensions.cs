@@ -66,6 +66,7 @@ public static class InfrastructureServiceExtensions
         services.AddScoped<GetFamilySummaryQueryHandler>();
         services.AddScoped<CreateMemberCommandHandler>();
         services.AddScoped<GetMemberQueryHandler>();
+        services.AddScoped<GetAllMembersQueryHandler>();
         services.AddScoped<RegenerateFamilyQrCommandHandler>();
         services.AddScoped<RegenerateMemberQrCommandHandler>();
         services.AddScoped<QrLookupQueryHandler>();

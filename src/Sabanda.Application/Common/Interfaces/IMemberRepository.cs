@@ -8,6 +8,7 @@ public interface IMemberRepository
     Task<Member?> FindByQrTokenJtiAsync(Guid jti);
     Task<bool> ExistsByCodeAsync(Guid tenantId, string code);
     Task<int> CountByFamilyIdAsync(Guid familyId);
+    Task<List<Member>> GetAllByTenantAsync(Guid tenantId);
     Task AddAsync(Member member);
     Task SaveChangesAsync();
 }

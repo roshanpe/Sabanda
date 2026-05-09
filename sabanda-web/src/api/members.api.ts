@@ -2,6 +2,9 @@ import { apiClient } from './client';
 import type { Member, QrToken } from '../types/domain.types';
 
 export const membersApi = {
+  getAll: () =>
+    apiClient.get<Member[]>('/members').then((r) => r.data),
+
   getById: (id: string) =>
     apiClient.get<Member>(`/members/${id}`).then((r) => r.data),
 
